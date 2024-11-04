@@ -6,21 +6,21 @@ vim-anywhere!
 ![demo](assets/demo.gif)
 
 Once [invoked](#keybinding), vim-anywhere will open a buffer. Close it and its
-contents are copied to your __clipboard__ and your previous application is
+contents are copied to your **clipboard** and your previous application is
 refocused.
 
 ## Installation
 
 #### Requirements
 
-__OSX:__
+**OSX:**
 
 - MacVim (`brew install --cask macvim`)
 
-__Linux:__
+**Linux:**
 
-- Gnome (or a derivative)
-- gVim
+- X11 or Wayland
+- nvim
 
 #### Install
 
@@ -42,7 +42,7 @@ curl -fsSL https://raw.github.com/cknadler/vim-anywhere/master/install | bash
 
 ## Keybinding
 
-__OSX:__ ( default = `ctrl+cmd+v` )
+**OSX:** ( default = `ctrl+cmd+v` )
 
 You can adjust the shortcut via [system preferences](assets/shortcut.png).
 
@@ -50,19 +50,21 @@ You can adjust the shortcut via [system preferences](assets/shortcut.png).
 System Preferences > Keyboard > Shortcuts > Services > Vim Anywhere
 ```
 
-__Linux:__ ( default = `ctrl+alt+v` )
+**Linux:** ( default = `ctrl+alt+v` )
 
-*Gnome*
+_Gnome_
+
 ```bash
 $ gconftool -t str --set /desktop/gnome/keybindings/vim-anywhere/binding <custom binding>
 ```
 
-*I3WM*
+_I3WM_
 
 ```bash
 $ echo 'bindsym $mod+Alt+v exec ~/.vim-anywhere/bin/run' >> ~/.i3/config # remember to reload your config after
 $ echo 'bindsym $mod+Alt+v exec ~/.vim-anywhere/bin/run' >> ~/.config/sway/config # remember to reload your config after
 ```
+
 Adjust in case `$mod` is not set to ctrl.
 
 ## History

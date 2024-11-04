@@ -26,8 +26,8 @@ require_file_exists() {
 
 while getopts ":v" opt; do
   case "$opt" in
-    v) set -x ;;
-    \?) echo "Invalid option: -$OPTARG" >&2 ;;
+  v) set -x ;;
+  \?) echo "Invalid option: -$OPTARG" >&2 ;;
   esac
 done
 
@@ -38,31 +38,24 @@ done
 AW_PATH=$HOME/.vim-anywhere
 TMPFILE_DIR=/tmp/vim-anywhere
 TMPFILE=$TMPFILE_DIR/doc-$(date +"%y%m%d%H%M%S")
-VIM_OPTS=--nofork
-
-# Use ~/.gvimrc.min or ~/.vimrc.min if one exists
-VIMRC_PATH=($HOME/.gvimrc.min $HOME/.vimrc.min)
-
-for vimrc_path in "${VIMRC_PATH[@]}"; do
-    if [ -f $vimrc_path ]; then
-        VIM_OPTS+=" -u $vimrc_path"
-        break
-    fi
-done
+NVIM_OPTS=
 
 mkdir -p $TMPFILE_DIR
 touch $TMPFILE
 
 # Linux
 if [[ $OSTYPE == "linux-gnu" ]]; then
+  bash -c 'sleep 0.5; YDOTOOL_SOCKET="/tmp/ydotoold.socket" ydotool key "29:1" "46:1" "46:0" "29:0"'
+  bash -c "wl-paste >$TMPFILE"
+  sleep 0.2
+
   chmod o-r $TMPFILE # Make file only readable by you
-  gvim $VIM_OPTS $TMPFILE
+  footclient zsh -c "source $HOME/adamtajti/.zshrc; nvim $NVIM_OPTS $TMPFILE"
   if [[ $WAYLAND_DISPLAY ]]; then
     cat $TMPFILE | wl-copy
-  else 
+  else
     cat $TMPFILE | xclip -selection clipboard
   fi
-
 
 # OSX
 elif [[ $OSTYPE == "darwin"* ]]; then
@@ -77,13 +70,13 @@ elif [[ $OSTYPE == "darwin"* ]]; then
     "mvim must have been moved or uninstalled.\nPlease make sure it is" \
     "available in your path and then reinstall vim-anywhere."
 
-  $mvim_path $VIM_OPTS $TMPFILE
+  $mvim_path $NVIM_OPTS $TMPFILE
   # todo, fix invalid file
 
   # NOTE
   # Here we set LANG explicitly to be UTF-8 compatible when copying text. The only way that was explicitly
   # setting this to en_US.UTF-8. This may eventually cause issues with other languages. If so, just remove
   # the LANG setting.
-  LANG=en_US.UTF-8 pbcopy < $TMPFILE
+  LANG=en_US.UTF-8 pbcopy <$TMPFILE
   osascript -e "activate application \"$app\""
 fi
